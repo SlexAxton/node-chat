@@ -185,23 +185,31 @@ $(channel).bind("msg", function(event, message) {
 
 // handle login (choosing a nick)
 $(function() {
+	
+	// fix browsers where submission won't happen... ? // TODO: figure out why this happens?!
+	$('#nick, #email').keyup(function(e){
+		if(e.keyCode === 13) {
+			$('#login').submit();
+		}
+	});
+	
 	function loginError(error) {
 		login
 			.addClass("error")
-			.find("label")
+			.find("label:first")
 				.text(error + " Please choose another:")
 			.end()
-			.find("input")
+			.find("input:first")
 				.focus();
 	}
 	
 	var login = $("#login");
 	login.submit(function() {
-		var nick = $.trim($("#nick").val());
-		var email = $.trim($("#email").val());
+		var nick  = $.trim($("#nick").val()),
+		    email = $.trim($("#email").val());
 		
 		// TODO: move the check into nodechat.js
-		if (!nick.length || !/^[a-zA-Z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+$/.test(nick)) {
+		if (!nick.length || !/^[a-zA-Z0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+$/.test(nick)) {
 			loginError("Invalid Nickname.");
 			return false;
 		}
@@ -221,7 +229,7 @@ $(function() {
 		
 		return false;
 	});
-	login.find("input").focus();
+	login.find("input:first").focus();
 });
 
 // handle sending a message and message history

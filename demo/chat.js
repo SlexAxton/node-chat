@@ -6,7 +6,7 @@ var sys = require("sys"),
 
 // create chat server
 var chatServer = chat.createServer();
-chatServer.listen(8002);
+chatServer.listen(8003);
 
 // create a channel and log all activity to stdout
 chatServer.addChannel({
