@@ -1,10 +1,39 @@
+(function($){
+	function linkify(inputText) {
+	    //URLs starting with http://, https://, or ftp://
+	    var replacePattern1 = /\b((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[a-zA-Z0-9-_\.]+\.(jpg|gif|png))\b/gim;
+	    var replacedText = inputText.replace(replacePattern1, '<img src="$1" />');
+	    
+	    var replacePattern1point5 = /\b((https?|ftp):\/\/(?![-A-Z0-9+&@#\/%?=~_|!:,.;]+\.(jpg|gif|png))[-A-Z0-9+&@#\/%?=~_|!:,.;]*\b[\/]?)/gim;
+	    replacedText = replacedText.replace(replacePattern1point5, '<a href="$1" target="_blank">$1</a>');
+	
+	    return replacedText;
+	}
+	function htmlencode(str) {
+		return str.replace(/[&<>"']/g, function($0) {
+		    return "&" + {"&":"amp", "<":"lt", ">":"gt", '"':"quot", "'":"#39"}[$0] + ";";
+		});
+	}
+	
+	$.fn.extend({
+		linkify: function(){
+			return this.each(function(){
+				var $this = $(this);
+				$this.html(linkify(htmlencode($this.text())));
+			});
+		}
+	});
+})(jQuery);
+
 (function($) {
 
 var title = document.title,
 	colors  = ["green", "orange", "yellow", "red", "fuschia", "blue"],
 	channel = nodeChat.connect("/chat"),
 	log,
-	message;
+	message,
+	history = [""],
+	history_pos = -1;
 
 // TODO: handle connectionerror
 
@@ -52,6 +81,7 @@ $(channel).bind("msg", function(event, message) {
 	$("<span></span>")
 		.addClass("chat-text")
 		.text(message.text)
+		.linkify()
 		.appendTo(row);
 	
 	row.appendTo(log);
@@ -188,13 +218,45 @@ $(function() {
 	login.find("input").focus();
 });
 
-// handle sending a message
+// handle sending a message and message history
 $(function() {
 	$("#channel form").submit(function() {
-		channel.send(message.val());
+		var msg = message.val();
+		channel.send(msg);
+		
 		message.val("").focus();
 		
+		// store message history
+		history[history.length-1] = msg;
+		history.push("");
+		history_pos = history.length - 1;
+		
 		return false;
+	});
+	message.keyup(function(e){
+		var UP   = 38,
+		    DOWN = 40,
+		    nextIndex;
+		
+		if (e.keyCode === UP) {
+			// save the current message if we're already typing
+			if (history_pos === (history.length-1)) {
+				history[history.length-1] = message.val();
+			}
+			nextIndex = history_pos - 1;
+			if (nextIndex >= 0 && nextIndex < history.length) {
+				isInHistory = true;
+				history_pos--;
+				message.val(history[nextIndex]);
+			}
+		}
+		else if (e.keyCode === DOWN) {
+			nextIndex = history_pos + 1
+			if (nextIndex >= 0 && nextIndex < history.length) {
+				history_pos++;
+				message.val(history[nextIndex]);
+			}
+		}
 	});
 });
 
