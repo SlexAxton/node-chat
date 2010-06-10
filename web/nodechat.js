@@ -70,7 +70,8 @@ $.extend(Channel.prototype, {
 		var channel = this;
 		this.request("/join", {
 			data: {
-				nick: nick
+				nick: nick,
+				gravatar: options.gravatar
 			},
 			success: function(data) {
 				if (!data) {

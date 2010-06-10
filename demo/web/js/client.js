@@ -3,6 +3,7 @@
 var title = document.title,
 	colors  = ["green", "orange", "yellow", "red", "fuschia", "blue"],
 	channel = nodeChat.connect("/chat"),
+	gravatars = {},
 	log,
 	message;
 
@@ -32,6 +33,10 @@ $(function() {
 	});
 });
 
+function userDisplay(nick) {
+	return '<img src="'+gravatars[nick]+'" class="gravatar"/><p class="nickname">'+nick+'</p>';
+}
+
 // new message posted to channel
 // - add to the chat log
 $(channel).bind("msg", function(event, message) {
@@ -46,7 +51,7 @@ $(channel).bind("msg", function(event, message) {
 	
 	$("<span></span>")
 		.addClass("chat-nick")
-		.text(message.nick)
+		.html(userDisplay(message.nick))
 		.appendTo(row);
 	
 	$("<span></span>")
@@ -83,11 +88,9 @@ $(channel).bind("msg", function(event, message) {
 // another user joined the channel
 // - add to the user list
 .bind("join", function(event, message) {
+	gravatars[message.nick] = "http://www.gravatar.com/avatar/"+(message.text)+"?d=identicon&s=30";
 	var added = false,
-		nick  = $("<li></li>", {
-			"class": colors[0],
-			text: message.nick
-		});
+		nick  = '<li class="'+colors[0]+'">'+userDisplay(message.nick)+'</li>';
 	colors.push(colors.shift());
 	$("#users > li").each(function() {
 		if (message.nick == this.innerHTML) {
@@ -132,11 +135,12 @@ $(channel).bind("msg", function(event, message) {
 // - remove from the user list
 .bind("part", function(event, message) {
 	$("#users > li").each(function() {
-		if (this.innerHTML == message.nick) {
+		if (new RegExp(message.nick).exec(this.innerHTML)) {
 			$(this).remove();
 			return false;
 		}
 	});
+	delete gravatars[message.nick];
 })
 
 // Auto scroll list to bottom
@@ -164,6 +168,7 @@ $(function() {
 	var login = $("#login");
 	login.submit(function() {
 		var nick = $.trim($("#nick").val());
+		var email = $.trim($("#email").val());
 		
 		// TODO: move the check into nodechat.js
 		if (!nick.length || !/^[a-zA-Z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+$/.test(nick)) {
@@ -172,6 +177,7 @@ $(function() {
 		}
 		
 		channel.join(nick, {
+			gravatar: MD5(email),
 			success: function() {
 				$("body")
 					.removeClass("login")

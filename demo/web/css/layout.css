@@ -200,6 +200,9 @@ body > header img {
 #users li.fuschia:after { background-position: -228px 0;}
 #users li.blue:after    { background-position: -285px 0;}
 
+.gravatar { max-height: 20px; vertical-align: middle; }
+.nickname { display: inline; padding-left: 10px; }
+
 /** ENTRY FORM */
 
 #entry {
@@ -351,7 +354,6 @@ span.pipe {
 }
 
 #login p {
-  position: absolute;
   content: "";
   display: block;
   height: 35px;
