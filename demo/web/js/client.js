@@ -1,9 +1,14 @@
+document.write = function(string) {
+	if (string.substr(0,5) !== "<link") {
+		$('.chat-text:last').prepend(string);
+	}
+};
 (function($){
 	function linkify(inputText) {
 	    // Test for gists
 	    if (inputText.substr(0,6) === '/gist ') {
 		var gistId = $.trim(inputText.substr(6));
-		return '<div style="width:600px;height:400px;"><script src="http://gist.github.com/'+ gistId +'.js"></scr'+'ipt></div>';
+		return '<script src="http://gist.github.com/'+ gistId +'.js"></scr'+'ipt>';
 	    }
 	
 	    //URLs starting with http://, https://, or ftp://
@@ -89,7 +94,8 @@ $(channel).bind("msg", function(event, message) {
 		.html(userDisplay(message.nick))
 		.appendTo(row);
 	
-	$("<span></span>")
+	var line = $("<span></span>");
+	    line
 		.addClass("chat-text")
 		.text(message.text)
 		.linkify()
