@@ -418,3 +418,14 @@ body.login header:before {
 
 body #login { display: none;}
 body.login #login { display: block;}
+
+
+#insertGist {
+  float:right;
+  width:57px;
+  margin-top:5px;
+  margin-right:10px;
+  height:50px;
+  text-indent:-10000px;
+  background-image:url(../images/octocat.png);
+}

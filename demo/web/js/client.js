@@ -1,5 +1,11 @@
 (function($){
 	function linkify(inputText) {
+	    // Test for gists
+	    if (inputText.substr(0,6) === '/gist ') {
+		var gistId = $.trim(inputText.substr(6));
+		return '<div style="width:600px;height:400px;"><script src="http://gist.github.com/'+ gistId +'.js"></scr'+'ipt></div>';
+	    }
+	
 	    //URLs starting with http://, https://, or ftp://
 	    var replacePattern1 = /\b((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[a-zA-Z0-9-_\.]+\.(jpg|gif|png))\b/gim;
 	    var replacedText = inputText.replace(replacePattern1, '<img src="$1" />');
@@ -191,6 +197,11 @@ $(function() {
 		if(e.keyCode === 13) {
 			$('#login').submit();
 		}
+	});
+	
+	// handle gist button
+	$('#insertGist').click(function(){
+		message.val("/gist ").focus();
 	});
 	
 	function loginError(error) {
