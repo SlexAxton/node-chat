@@ -310,6 +310,16 @@ $(function() {
 		if (!focused) {
 			unread++;
 			document.title = "(" + unread + ") " + title;
+			
+			if(window.fluid) {
+			    window.fluid.dockBadge = unread;
+        	    fluid.showGrowlNotification({
+                    title: (message.nick || 'System') + " said something!",
+                    description: message.text || '&lt;no text body&gt;',
+                    priority: 3,
+                    sticky: false
+                });
+        	}
 		}
 	});
 });
