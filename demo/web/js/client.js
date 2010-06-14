@@ -317,7 +317,8 @@ $(function() {
                     title: (message.nick || 'System') + " said something!",
                     description: message.text || '&lt;no text body&gt;',
                     priority: 3,
-                    sticky: false
+                    sticky: false,
+                    icon: gravatars[message.nick]
                 });
         	}
 		}
