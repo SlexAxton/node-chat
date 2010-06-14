@@ -86,18 +86,18 @@ $(channel).bind("msg", function(event, message) {
 	
 	$("<span></span>")
 		.addClass("chat-time")
-		.text(time)
+		.text((time || '88:88:88'))
 		.appendTo(row);
 	
 	$("<span></span>")
 		.addClass("chat-nick")
-		.html(userDisplay(message.nick))
+		.html((userDisplay(message.nick) || 'System'))
 		.appendTo(row);
 	
 	var line = $("<span></span>");
 	    line
 		.addClass("chat-text")
-		.text(message.text)
+		.text((message.text || '&lt;no text body&gt;'))
 		.linkify()
 		.appendTo(row);
 	
