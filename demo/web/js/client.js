@@ -322,6 +322,9 @@ $(function() {
                 });
         	}
 		}
+		else if(focused && window.fluid) {
+	        window.fluid.dockBadge = '';
+        }
 	});
 });
 
