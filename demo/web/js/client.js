@@ -71,6 +71,11 @@ $(function() {
 			.val($(this).text() + ": " + message.val())
 			.focus();
 	});
+	
+	// focus in the send box when the main area is clicked
+	$('#frame').click(function(){
+		$('#message').focus();
+	});
 });
 
 function userDisplay(nick) {
