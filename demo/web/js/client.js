@@ -304,6 +304,9 @@ $(function() {
 			focused = true;
 			unread = 0;
 			document.title = title;
+			if(window.fluid) {
+			    window.fluid.dockBadge = '';
+			}
 		});
 	
 	$(channel).bind("msg", function(event, message) {
@@ -322,9 +325,6 @@ $(function() {
                 });
         	}
 		}
-		else if(focused && window.fluid) {
-	        window.fluid.dockBadge = '';
-        }
 	});
 });
 
